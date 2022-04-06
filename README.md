@@ -168,6 +168,18 @@ yarn hardhat run scripts/propose.ts --network localhost
 yarn hardhat run scripts/vote.ts --network localhost
 ```
 
+3a. Verify the state of the proposal
+
+```
+yarn hardhat console --network localhost //access hardhat from the console
+
+const governor = await ethers.getContract("GovernorContract")
+
+//Get the proposalId from the proposals.json
+var proposalId = "";//
+await governor.state(proposalId)
+```
+
 4. Queue & Execute proposal!
 
 ```
