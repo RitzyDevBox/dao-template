@@ -1,5 +1,7 @@
 # DAO Template
 
+*This has been updated to work with Goerli over Rinkeby*
+
 <div id="top"></div>
 
 - [DAO Template](#dao-template)
@@ -81,6 +83,10 @@ The following have tools to help you start a DAO without having to deploy contra
 
 <!-- GETTING STARTED -->
 # Getting Started 
+
+Work with this repo in the browser (optional)<br/>
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/PatrickAlphaC/dao-template)
 
 It's recommended that you've gone through the [hardhat getting started documentation](https://hardhat.org/getting-started/) before proceeding here. 
 
