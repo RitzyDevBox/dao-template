@@ -21,6 +21,10 @@ contract RitzyToken is ERC20Votes, Ownable {
     super._afterTokenTransfer(from, to, amount);
   }
 
+  function mint(address to, uint256 amount) public onlyOwner {
+      _mint(to, amount);
+  }
+
   function _mint(address to, uint256 amount) internal override(ERC20Votes) {
     super._mint(to, amount);
   }

@@ -29,3 +29,7 @@ export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
 export const NEW_STORE_VALUE = 77
 export const FUNC = "store"
 export const PROPOSAL_DESCRIPTION = "Proposal #1 77 in the Box!"
+
+export const MINT_VALUE = "1000000000000000000";
+export const MINT_FUNC = "mint";
+export const MINT_PROPOSAL_DESCRIPTION = "mint address new debt"; 
