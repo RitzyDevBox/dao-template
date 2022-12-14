@@ -8,7 +8,7 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   // @ts-ignore
   const { getNamedAccounts, deployments, network } = hre
   const { deploy, log } = deployments
-  const { deployer } = await getNamedAccounts()
+  const { deployer, user } = await getNamedAccounts()
   log("----------------------------------------------------")
   log("Deploying GovernanceToken and waiting for confirmations...")
   const governanceToken = await deploy("GovernanceToken", {
@@ -20,8 +20,9 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   })
   log(`GovernanceToken at ${governanceToken.address}`)
   if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-    await verify(governanceToken.address, [])
+    await verify(governanceToken.address, [], "contracts/GovernanceToken.sol:GovernanceToken")
   }
+
   log(`Delegating to ${deployer}`)
   await delegate(governanceToken.address, deployer)
   log("Delegated!")

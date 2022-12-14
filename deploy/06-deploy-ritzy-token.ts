@@ -20,7 +20,7 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   })
   log(`RitzyToken at ${ritzyToken.address}`)
   if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-    await verify(ritzyToken.address, [])
+    await verify(ritzyToken.address, [], " contracts/RitzyToken.sol:RitzyToken")
   }
 
 

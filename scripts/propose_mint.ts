@@ -6,9 +6,11 @@ import {
   MINT_FUNC,
   MINT_PROPOSAL_DESCRIPTION,
   MINT_VALUE,
+  GOVERNOR_CONTRACT_NAME,
 } from "../helper-hardhat-config"
 import * as fs from "fs"
 import { moveBlocks } from "../utils/move-blocks"
+import { ThreeMarketGovernorBravoContract } from "../typechain-types/ThreeMarketGovernorBravoContract"
 
 export async function proposeMint() {
   
@@ -16,12 +18,13 @@ export async function proposeMint() {
   const args =[box.address, MINT_VALUE];
   const functionToCall = MINT_FUNC; 
   const proposalDescription = MINT_PROPOSAL_DESCRIPTION
-  const governor = await ethers.getContract("GovernorContract")
+  const governor = await ethers.getContract(GOVERNOR_CONTRACT_NAME) as ThreeMarketGovernorBravoContract
   const ritzyToken = await ethers.getContract("RitzyToken")
   const encodedFunctionCall = ritzyToken.interface.encodeFunctionData(functionToCall, args)
   console.log(`Proposing ${functionToCall} on ${ritzyToken.address} with ${args}`)
   console.log(`Proposal Description:\n  ${proposalDescription}`)
-  const proposeTx = await governor.propose(
+  
+  const proposeTx = await governor["propose(address[],uint256[],bytes[],string)"](
     [ritzyToken.address],
     [0],
     [encodedFunctionCall],
@@ -33,6 +36,11 @@ export async function proposeMint() {
   }
 
   const proposeReceipt = await proposeTx.wait(1)
+
+  if (!proposeReceipt.events || !proposeReceipt.events[0].args) {
+    throw new Error("no propose reciept")
+  }
+
   const proposalId = proposeReceipt.events[0].args.proposalId
   console.log(`Proposed with proposal ID:\n  ${proposalId}`)
 
@@ -52,14 +60,15 @@ export async function proposeMint() {
 
 function storeProposalId(proposalId: any) {
   const chainId = network.config.chainId!.toString();
-  let proposals:any;
+  let proposals:any = {};
 
   if (fs.existsSync(proposalsFile)) {
       proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
-  } else {
-      proposals = { };
-      proposals[chainId] = [];
-  }   
+  }
+  if(!proposals[chainId]) {
+    proposals[chainId] = [];
+  }
+
   proposals[chainId].push(proposalId.toString());
   fs.writeFileSync(proposalsFile, JSON.stringify(proposals), "utf8");
 }

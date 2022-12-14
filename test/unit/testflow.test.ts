@@ -1,4 +1,5 @@
-import { GovernorContract, GovernanceToken, TimeLock, Box } from "../../typechain-types"
+import { GovernanceToken, TimeLock, Box } from "../../typechain-types"
+import { ThreeMarketGovernorBravoContract } from "../../typechain-types/ThreeMarketGovernorBravoContract"
 import { deployments, ethers } from "hardhat"
 import { assert, expect } from "chai"
 import {
@@ -13,7 +14,7 @@ import { moveBlocks } from "../../utils/move-blocks"
 import { moveTime } from "../../utils/move-time"
 
 describe("Governor Flow", async () => {
-  let governor: GovernorContract
+  let governor: ThreeMarketGovernorBravoContract
   let governanceToken: GovernanceToken
   let timeLock: TimeLock
   let box: Box

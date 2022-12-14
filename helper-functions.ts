@@ -1,11 +1,12 @@
 import { run } from "hardhat"
 
-const verify = async (contractAddress: string, args: any[]) => {
+const verify = async (contractAddress: string, args: any[], contractName: string | undefined = undefined) => {
   console.log("Verifying contract...")
   try {
     await run("verify:verify", {
       address: contractAddress,
       constructorArguments: args,
+      contract: contractName
     })
   } catch (e: any) {
     if (e.message.toLowerCase().includes("already verified")) {

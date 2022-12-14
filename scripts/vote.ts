@@ -1,6 +1,8 @@
 import * as fs from "fs"
 import { network, ethers } from "hardhat"
-import { proposalsFile, developmentChains, VOTING_PERIOD } from "../helper-hardhat-config"
+import { TASK_ETHERSCAN_VERIFY } from "hardhat-deploy"
+import { proposalsFile, developmentChains, VOTING_PERIOD, GOVERNOR_CONTRACT_NAME } from "../helper-hardhat-config"
+import { ThreeMarketGovernorBravoContract } from "../typechain-types/ThreeMarketGovernorBravoContract"
 import { moveBlocks } from "../utils/move-blocks"
 
 
@@ -17,9 +19,19 @@ async function main() {
 // 0 = Against, 1 = For, 2 = Abstain for this example
 export async function vote(proposalId: string, voteWay: number, reason: string) {
   console.log("Voting...")
-  const governor = await ethers.getContract("GovernorContract")
+  const signer = await ethers.getSigners()
+
+  console.log('signers:' + signer);
+
+  const governor = await ethers.getContract(GOVERNOR_CONTRACT_NAME) as ThreeMarketGovernorBravoContract
   const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason)
   const voteTxReceipt = await voteTx.wait(1)
+
+  if (!voteTxReceipt.events || !voteTxReceipt.events[0].args) {
+    throw new Error("no vote reciept")
+  }
+
+
   console.log(voteTxReceipt.events[0].args.reason)
   const proposalState = await governor.state(proposalId)
   console.log(`Current Proposal State: ${proposalState}`)

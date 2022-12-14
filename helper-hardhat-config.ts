@@ -10,7 +10,10 @@ export interface networkConfigInfo {
 export const networkConfig: networkConfigInfo = {
   localhost: {},
   hardhat: {},
-  goerli: {
+  polygon: {
+    blockConfirmations: 6,
+  },
+  polygon_mumbai: {
     blockConfirmations: 6,
   },
 }
@@ -32,4 +35,6 @@ export const PROPOSAL_DESCRIPTION = "Proposal #1 77 in the Box!"
 
 export const MINT_VALUE = "1000000000000000000";
 export const MINT_FUNC = "mint";
-export const MINT_PROPOSAL_DESCRIPTION = "mint address new debt"; 
+export const MINT_PROPOSAL_DESCRIPTION = "mint address new debt 2"; 
+
+export const GOVERNOR_CONTRACT_NAME = "ThreeMarketGovernorBravoContract";
