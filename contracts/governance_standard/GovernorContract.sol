@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorSettings.sol";
-import "@openzeppelin/contracts/governance/compatibility/GovernorCompatibilityBravo.sol";
+import "./GovenorEnumerationCompatibilityBravo.sol";
 
 contract ThreeMarketGovernorBravoContract is
   Governor,
   GovernorSettings,
-  GovernorCompatibilityBravo,
+  GovenorEnumerationCompatibilityBravo,
   GovernorVotes,
   GovernorVotesQuorumFraction,
   GovernorTimelockControl
@@ -25,8 +25,8 @@ contract ThreeMarketGovernorBravoContract is
   )
     Governor("ThreeMarketGovernorBravoContract")
     GovernorSettings(
-      _votingDelay, /* 1 block */ // votind delay
-      _votingPeriod, // 45818, /* 1 week */ // voting period
+      _votingDelay,
+      _votingPeriod,
       0 // proposal threshold
     )
     GovernorVotes(_token)
@@ -72,7 +72,7 @@ contract ThreeMarketGovernorBravoContract is
 
     function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description)
         public
-        override(Governor, GovernorCompatibilityBravo, IGovernor)
+        override(Governor, GovenorEnumerationCompatibilityBravo, IGovernor)
         returns (uint256)
     {
         return super.propose(targets, values, calldatas, description);
