@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import verify from "../helper-functions"
-import { networkConfig, developmentChains } from "../helper-hardhat-config"
+import { networkConfig, developmentChains, TIMELOCK_CONTROLLER_NAME } from "../helper-hardhat-config"
 import { ethers } from "hardhat"
 
 const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -24,7 +24,7 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   }
 
 
-  const timeLock = await ethers.getContract("TimeLock")
+  const timeLock = await ethers.getContract(TIMELOCK_CONTROLLER_NAME)
   log(`Transfer Ownership to ${timeLock.address}`)
 
   const ritzyTokenContract = await ethers.getContractAt("RitzyToken", ritzyToken.address)

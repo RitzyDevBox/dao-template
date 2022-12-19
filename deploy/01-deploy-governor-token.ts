@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import verify from "../helper-functions"
-import { networkConfig, developmentChains } from "../helper-hardhat-config"
+import { networkConfig, developmentChains, GOVERNANCE_TOKEN_NAME } from "../helper-hardhat-config"
 import { ethers } from "hardhat"
 
 const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -11,7 +11,8 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   const { deployer, user } = await getNamedAccounts()
   log("----------------------------------------------------")
   log("Deploying GovernanceToken and waiting for confirmations...")
-  const governanceToken = await deploy("GovernanceToken", {
+
+  const governanceToken = await deploy(GOVERNANCE_TOKEN_NAME, {
     from: deployer,
     args: [],
     log: true,
@@ -26,10 +27,11 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   log(`Delegating to ${deployer}`)
   await delegate(governanceToken.address, deployer)
   log("Delegated!")
+  
 }
 
 const delegate = async (governanceTokenAddress: string, delegatedAccount: string) => {
-  const governanceToken = await ethers.getContractAt("GovernanceToken", governanceTokenAddress)
+  const governanceToken = await ethers.getContractAt(GOVERNANCE_TOKEN_NAME, governanceTokenAddress)
   const transactionResponse = await governanceToken.delegate(delegatedAccount)
   await transactionResponse.wait(1)
   console.log(`Checkpoints: ${await governanceToken.numCheckpoints(delegatedAccount)}`)

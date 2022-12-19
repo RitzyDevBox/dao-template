@@ -35,7 +35,7 @@ describe("Governor Flow", async () => {
   it("proposes, votes, waits, queues, and then executes", async () => {
     // propose
     const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, [NEW_STORE_VALUE])
-    const proposeTx = await governor.propose(
+    const proposeTx = await governor["propose(address[],uint256[],bytes[],string)"](
       [box.address],
       [0],
       [encodedFunctionCall],

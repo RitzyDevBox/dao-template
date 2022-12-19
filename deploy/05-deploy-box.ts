@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
 import verify from "../helper-functions"
-import { networkConfig, developmentChains } from "../helper-hardhat-config"
+import { networkConfig, developmentChains, TIMELOCK_CONTROLLER_NAME } from "../helper-hardhat-config"
 import { ethers } from "hardhat"
 
 const deployBox: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -23,7 +23,7 @@ const deployBox: DeployFunction = async function (hre: HardhatRuntimeEnvironment
     await verify(box.address, [])
   }
   const boxContract = await ethers.getContractAt("Box", box.address)
-  const timeLock = await ethers.getContract("TimeLock")
+  const timeLock = await ethers.getContract(TIMELOCK_CONTROLLER_NAME)
   const transferTx = await boxContract.transferOwnership(timeLock.address)
   await transferTx.wait(1)
 }

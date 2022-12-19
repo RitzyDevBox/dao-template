@@ -34,7 +34,7 @@ contract ThreeMarketGovernorBravoContract is
     GovernorTimelockControl(_timelock)
   {}
 
- function votingDelay()
+    function votingDelay()
         public
         view
         override(IGovernor, GovernorSettings)
