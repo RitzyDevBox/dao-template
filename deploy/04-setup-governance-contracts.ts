@@ -9,20 +9,9 @@ const setupContracts: DeployFunction = async function (hre: HardhatRuntimeEnviro
   const { getNamedAccounts, deployments, network } = hre
   const { log } = deployments
   const { deployer } = await getNamedAccounts()
-  const governanceToken = await ethers.getContract(GOVERNANCE_TOKEN_NAME, deployer)
   const timeLock = await ethers.getContract(TIMELOCK_CONTROLLER_NAME, deployer)
   const governor = await ethers.getContract(GOVERNOR_CONTRACT_NAME, deployer)
 
-  log("----------------------------------------------------")
-  log("Setting Governance Token Ownership...")
-
-  log(`Transfer Ownership to ${timeLock.address}`)
-
-  const governanceTokenContract = await ethers.getContractAt(GOVERNANCE_TOKEN_NAME, governanceToken.address)
-  const transferTx = await governanceTokenContract.transferOwnership(timeLock.address)
-  await transferTx.wait(1)
-  
-  log("----------------------------------------------------")
   log("Setting up contracts for roles...")
   // would be great to use multicall here...
   const proposerRole = await timeLock.PROPOSER_ROLE()
