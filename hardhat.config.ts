@@ -7,6 +7,7 @@ import "dotenv/config"
 import "solidity-coverage"
 import "hardhat-deploy"
 import { HardhatUserConfig } from "hardhat/config"
+import '@openzeppelin/hardhat-upgrades'
 
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || ""
 const INFURA_RPC_URL = process.env.INFURA_RPC_URL

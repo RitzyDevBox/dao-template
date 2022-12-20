@@ -9,6 +9,7 @@ import {
   VOTING_DELAY,
   GOVERNOR_CONTRACT_NAME,
   TIMELOCK_CONTROLLER_NAME,
+  GOVERNANCE_TOKEN_NAME,
 } from "../helper-hardhat-config"
 
 const deployGovernorContract: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -16,7 +17,7 @@ const deployGovernorContract: DeployFunction = async function (hre: HardhatRunti
   const { getNamedAccounts, deployments, network } = hre
   const { deploy, log, get } = deployments
   const { deployer } = await getNamedAccounts()
-  const governanceToken = await get("GovernanceToken")
+  const governanceToken = await get(GOVERNANCE_TOKEN_NAME)
   const timeLock = await get(TIMELOCK_CONTROLLER_NAME)
   const args = [
       governanceToken.address,
