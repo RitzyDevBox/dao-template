@@ -8,27 +8,27 @@ import { ethers, upgrades } from "hardhat"
 
 const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // @ts-ignore
-  const { getNamedAccounts, deployments, network } = hre
-  const { deploy, log, get } = deployments
-  const { deployer } = await getNamedAccounts()
-  log("----------------------------------------------------")
-  log("Deploying GovernanceToken and waiting for confirmations...")
+    const { getNamedAccounts, deployments, network } = hre
+    const { deploy, save, log, get } = deployments
+    const { deployer } = await getNamedAccounts()
+    log("----------------------------------------------------")
+    log("Deploying GovernanceToken and waiting for confirmations...")
 
-  const governanceTokenContractFactory = await ethers.getContractFactory(GOVERNANCE_TOKEN_NAME);
-  console.log(`Deploying ${GOVERNANCE_TOKEN_NAME}...`);
+    const governanceTokenContractFactory = await ethers.getContractFactory(GOVERNANCE_TOKEN_NAME);
+    console.log(`Deploying ${GOVERNANCE_TOKEN_NAME}...`);
 
-  const deployedProxy = await upgrades.deployProxy(governanceTokenContractFactory, [], {
-    initializer: "initialize",
-    kind: "uups",
-  });
+    const deployedProxy = await upgrades.deployProxy(governanceTokenContractFactory, [], {
+      initializer: "initialize",
+      kind: "uups",
+    });
 
 
-  await deployedProxy.deployed();
-  console.log(`${GOVERNANCE_TOKEN_NAME} proxy deployed to: ${deployedProxy.address}`);
+    await deployedProxy.deployed();
+    console.log(`${GOVERNANCE_TOKEN_NAME} proxy deployed to: ${deployedProxy.address}`);
 
-  const governanceToken = await governanceTokenContractFactory.attach(
-     deployedProxy.address
-  );
+    const governanceToken = await governanceTokenContractFactory.attach(
+        deployedProxy.address
+    );
 
 
   log(`Delegating to ${deployer}`)
@@ -53,6 +53,14 @@ const deployGovernanceToken: DeployFunction = async function (hre: HardhatRuntim
   await transferTx.wait(1)
 
   log('transfered...')
+
+  const artifact = await deployments.getExtendedArtifact(GOVERNANCE_TOKEN_NAME);
+  const proxyDeployments = {
+      address: deployedProxy.address,
+      ...artifact
+  }
+
+  await save(GOVERNANCE_TOKEN_NAME, proxyDeployments);
 
   if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
     await verify(deployedProxy.address, [])

@@ -24,18 +24,19 @@ const deployGovernorContract: DeployFunction = async function (hre: HardhatRunti
   const deploySigner = await governanceTokenContractFactory.signer;
   const transactionCount = await deploySigner.getTransactionCount()
 
-  const governanceTokenAddress = getContractAddress({
-    from: await deploySigner.getAddress(),
-    nonce: transactionCount-3
-  });
+  // const governanceTokenAddress = getContractAddress({
+  //   from: await deploySigner.getAddress(),
+  //   nonce: transactionCount-3
+  // });
 
-   console.log(`governanceToken Addresss: ${governanceTokenAddress}`)
 
   // const governanceToken = await get(GOVERNANCE_TOKEN_NAME)
   const timeLock = await get(TIMELOCK_CONTROLLER_NAME)
-  //const governanceToken = await get(GOVERNANCE_TOKEN_NAME)
+  const governanceToken = await get(GOVERNANCE_TOKEN_NAME)
+
+  console.log(`governanceToken Addresss: ${governanceToken.address}`)
   const args = [
-      governanceTokenAddress,
+      governanceToken.address,
       timeLock.address,
       QUORUM_PERCENTAGE,
       VOTING_PERIOD,
