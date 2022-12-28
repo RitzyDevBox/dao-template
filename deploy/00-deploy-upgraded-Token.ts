@@ -16,6 +16,7 @@ const deployUpgradedGovernanceToken: DeployFunction = async function (hre: Hardh
   const governanceTokenV2 = await ethers.getContractFactory(GOVERNANCE_TOKEN_NAME);
   const governanceTokenContract = await governanceTokenV2.deploy();
 
+  
   log(`Upgraded Token at ${governanceTokenContract.address}`)
   
   if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
@@ -23,7 +24,6 @@ const deployUpgradedGovernanceToken: DeployFunction = async function (hre: Hardh
   }
 
   log(`Verified Token at ${governanceTokenContract.address}`)
-
 
   const owner = await governanceTokenContract.owner();
   log(`owner: ${owner}`)

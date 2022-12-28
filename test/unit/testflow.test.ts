@@ -1,5 +1,4 @@
-import { GovernanceToken, TimeLock, Box } from "../../typechain-types"
-import { ThreeMarketGovernorBravoContract } from "../../typechain-types/ThreeMarketGovernorBravoContract"
+import { GovernanceToken, Box, ThreeMarketGovernorBravoContract, TimelockController } from "../../typechain-types"
 import { deployments, ethers } from "hardhat"
 import { assert, expect } from "chai"
 import {
@@ -9,6 +8,9 @@ import {
   VOTING_DELAY,
   VOTING_PERIOD,
   MIN_DELAY,
+  GOVERNOR_CONTRACT_NAME,
+  GOVERNANCE_TOKEN_NAME,
+  TIMELOCK_CONTROLLER_NAME,
 } from "../../helper-hardhat-config"
 import { moveBlocks } from "../../utils/move-blocks"
 import { moveTime } from "../../utils/move-time"
@@ -16,15 +18,16 @@ import { moveTime } from "../../utils/move-time"
 describe("Governor Flow", async () => {
   let governor: ThreeMarketGovernorBravoContract
   let governanceToken: GovernanceToken
-  let timeLock: TimeLock
+  let timeLock: TimelockController
   let box: Box
   const voteWay = 1 // for
   const reason = "I lika do da cha cha"
   beforeEach(async () => {
     await deployments.fixture(["all"])
-    governor = await ethers.getContract("GovernorContract")
-    timeLock = await ethers.getContract("TimeLock")
-    governanceToken = await ethers.getContract("GovernanceToken")
+    
+    governor = await ethers.getContract(GOVERNOR_CONTRACT_NAME)
+    timeLock = await ethers.getContract(TIMELOCK_CONTROLLER_NAME)
+    governanceToken = await ethers.getContract(GOVERNANCE_TOKEN_NAME)
     box = await ethers.getContract("Box")
   })
 
@@ -59,7 +62,7 @@ describe("Governor Flow", async () => {
     // queue & execute
     // const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION))
     const descriptionHash = ethers.utils.id(PROPOSAL_DESCRIPTION)
-    const queueTx = await governor.queue([box.address], [0], [encodedFunctionCall], descriptionHash)
+    const queueTx = await governor["queue(address[],uint256[],bytes[],bytes32)"]([box.address], [0], [encodedFunctionCall], descriptionHash)
     await queueTx.wait(1)
     await moveTime(MIN_DELAY + 1)
     await moveBlocks(1)
@@ -69,7 +72,7 @@ describe("Governor Flow", async () => {
 
     console.log("Executing...")
     console.log
-    const exTx = await governor.execute([box.address], [0], [encodedFunctionCall], descriptionHash)
+    const exTx = await governor["execute(address[],uint256[],bytes[],bytes32)"]([box.address], [0], [encodedFunctionCall], descriptionHash)
     await exTx.wait(1)
     console.log((await box.retrieve()).toString())
   })

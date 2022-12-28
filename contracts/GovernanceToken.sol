@@ -16,6 +16,7 @@ contract GovernanceToken is Initializable, ERC20Upgradeable, ERC20BurnableUpgrad
         _disableInitializers();
     }
 
+    //Comment 001
     function initialize() initializer public {
         __ERC20_init("3 Market Token", "3MRK");
         __Pausable_init();
